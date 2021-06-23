@@ -1,0 +1,76 @@
+version: "3.5"
+
+services:
+  f-node:
+    build:
+      context: ./config/vue
+      dockerfile: Dockerfile
+    container_name: f-node
+    working_dir: ${APP_ROOT}
+    volumes:
+      - ${FRONT_ROOT}:${APP_ROOT}
+      - ./logs/npm-front:/root/.npm/_logs
+    ports:
+      - 80:8080
+    networks:
+      - app_net
+    environment:
+      - BACK_DOMAIN="localhost:81"
+    command: npm run serve --watch
+
+  b-node:
+    build:
+      context: ./config/nest
+      dockerfile: Dockerfile
+    container_name: b-node
+    working_dir: ${APP_ROOT}/edser
+    environment:
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+      - MONGO_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_PASSWORD=${MONGO_ROOT_PASSWORD}
+    ports:
+      - 81:8080
+      - 9229:9229
+    volumes:
+      - ${BACK_ROOT}:${APP_ROOT}
+      - ./logs/npm-back:/root/.npm/_logs
+    networks:
+      - app_net
+    command: npm run start:dev --public b-node:8080
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    volumes:
+      - ./data/mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
+    networks:
+      - app_net
+
+  mongo-express:
+    image: mongo-express
+    container_name: 'mongo-express'
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_ROOT_USER}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_ROOT_PASSWORD}
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=${MONGO_ROOT_USER}
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
+    depends_on:
+      - mongo
+    ports:
+      - 82:8081
+    networks:
+      - app_net
+
+networks:
+    app_net:
+        driver: "bridge"

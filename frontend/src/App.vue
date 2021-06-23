@@ -1,7 +1,7 @@
 <template>
   <div class="main_layout">
     <div class="wrapper left_menu">
-      <div class="tab_logo">МБОУ СОШ №3</div>
+      <div class="tab_logo">EdSer</div>
       <MainMenu :tabs="main_tabs"/>
     </div>
     <div class="main_window">
@@ -10,32 +10,7 @@
   </div>
 
   <div class="main_particles">
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
-    <div class="_particle"></div>
+    <div v-for="n in 20" class="_particle"></div>
   </div>
 </template>
 

@@ -12,8 +12,6 @@ services:
       - ./logs/npm-front:/root/.npm/_logs
     ports:
       - 80:8080
-    networks:
-      - app_net
     environment:
       - BACK_DOMAIN="localhost:81"
     command: npm run serve --watch

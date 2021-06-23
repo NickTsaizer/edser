@@ -33,7 +33,6 @@ export default {
 
   methods: {
     loadMore: function () {
-      console.log("LOADMORE")
       this.busy = true;
       axios.get(`http://${document.domain}:81/posts`, {headers: {}}).then(response => (
               this.addPosts(response.data)
